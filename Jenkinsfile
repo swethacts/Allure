@@ -23,13 +23,7 @@ pipeline {
 
     stage('Results') {
 
-      steps{
-  
-        junit '**/target/*.xml'
-
-        archive 'target/*'
-
-      }
+     
         steps {
     script {
             allure([
