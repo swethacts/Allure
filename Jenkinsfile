@@ -25,13 +25,18 @@ pipeline {
 
      
         steps {
+         
+         junit '**/target/*.xml'
+
+        archive 'target/*'
+         
     script {
             allure([
                     includeProperties: false,
                     jdk: '',
                     properties: [],
                     reportBuildPolicy: 'ALWAYS',
-                   results: [[path: 'target/allure-results']]
+                   results: [[path: 'target/*']]
               
             ])
     }
