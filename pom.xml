@@ -41,7 +41,161 @@
         <version>5.5.0</version>
       
             <configuration>
+                   <projectFile>global-weather-soapui-project.xml</projectFile>  <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>Sample</groupId>
+  <artifactId>check</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+
+ <name>Maven 2 SoapUI Sample</name>
+    <url>http://maven.apache.org</url>
+
+
+<pluginRepositories>
+    <pluginRepository>
+        <id>smartbear-sweden-plugin-repository</id>
+        <url>http://www.soapui.org/repository/maven2/</url>
+    </pluginRepository>
+</pluginRepositories>
+
+<dependencies>
+<dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>2.0</version>
+    </dependency>
+  
+ <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency> 
+	<dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-testng</artifactId>
+      <version>${allure.version}</version>
+    </dependency>
+</dependencies>
+<build>
+     <plugins>
+    <plugin>
+        <groupId>com.smartbear.soapui</groupId>
+        <artifactId>soapui-maven-plugin</artifactId>
+        <version>5.5.0</version>
+      
+            <configuration>
                    <projectFile>global-weather-soapui-project.xml</projectFile>  
+                 
+                   <outputFolder>${basedir}/target</outputFolder>
+
+                          
+                           <junitReport>true</junitReport>
+                           <exportAll>true</exportAll>
+                           <printReport>true</printReport>
+                        <!--   <testFailIgnore>true</testFailIgnore>   -->
+        </configuration>
+         <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+        
+    </plugin>
+    
+</plugins>
+
+<!-- Integration tests (failsafe-plugin) -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.0</version>
+        <configuration>
+          <parallel>methods</parallel>
+          <threadCount>${threads}</threadCount>
+          <systemPropertyVariables>
+            <!-- For Frameworkium screenshots on test failure -->
+            <screenshotDirectory>
+              ${project.build.directory}/screenshots
+            </screenshotDirectory>
+            <!-- Required for writing the allure results -->
+            <allure.results.directory>
+              ${project.build.directory}/allure-results
+            </allure.results.directory>
+          </systemPropertyVariables>
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Tests.java</include>
+          </includes>
+          <groups>${groups}</groups>
+          <!-- required for Allure annotations and Jacoco code coverage -->
+          <argLine>
+            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+            ${failsafeArgLine}
+          </argLine>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Allure2 -->
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <!-- Keep version in sync with dependencies -->
+          <reportVersion>${allure.version}</reportVersion>
+          <!--
+            Hack until they fix the plugin
+            (see https://github.com/allure-framework/allure-maven/issues/66)
+          -->
+          <allureDownloadUrl>https://dl.bintray.com/qameta/maven/io/qameta/allure/allure-commandline/%s/allure-commandline-%s.zip </allureDownloadUrl>
+        </configuration>
+      </plugin>
+
+    </build>
+  
+      <reporting>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.19.1</version>
+         </plugin>
+      </plugins>
+   </reporting>
+   
+     <properties>
+    <threads>1</threads>
+    <groups />
+    <aspectj.version>1.9.2</aspectj.version>
+    <allure.version>2.9.0</allure.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+</project>
+
                  
                    <outputFolder>${basedir}/target</outputFolder>
 
