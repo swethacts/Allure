@@ -14,24 +14,7 @@ pipeline {
             }
         }
 		
-		
-		
-			/*stage('reports') {
-    steps {
-    script {
-            allure([
-         includeProperties: false,
-         jdk: '',
-         properties: [[key: 'allure.issues.tracker.pattern', value: 'http://tracker.company.com/%s']],
-         reportBuildPolicy: 'ALWAYS',
-         results: [[path: 'target/allure-results'], [path: 'other_target/allure-results']]
-         ])
-    }
-    }
-}*/
-
-
-		
+				
     }
 
     post {
